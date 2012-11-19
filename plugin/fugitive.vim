@@ -1165,6 +1165,15 @@ function! s:EditRunComplete(A,L,P) abort
   endif
 endfunction
 
+function! s:ShowHelp(help_tag, cmd)
+    exe 'help fugitive-:'.a:help_tag
+    wincmd P
+    close
+    wincmd p
+    resize 15
+    exe 'nnoremap <buffer> <silent> ? :close<Bar>'.a:cmd.'<CR>'
+endfunction
+
 call s:command("-bar -bang -nargs=? -complete=customlist,s:EditComplete Ge       :execute s:Edit('edit<bang>',0,<f-args>)")
 call s:command("-bar -bang -nargs=? -complete=customlist,s:EditComplete Gedit    :execute s:Edit('edit<bang>',0,<f-args>)")
 call s:command("-bar -bang -nargs=? -complete=customlist,s:EditRunComplete Gpedit   :execute s:Edit('pedit',<bang>0,<f-args>)")
@@ -2060,6 +2069,7 @@ function! s:BufReadIndex()
     xnoremap <buffer> <silent> p :<C-U>execute <SID>StagePatch(line("'<"),line("'>"))<CR>
     nnoremap <buffer> <silent> q :<C-U>if bufnr('$') == 1<Bar>quit<Bar>else<Bar>bdelete<Bar>endif<CR>
     nnoremap <buffer> <silent> R :<C-U>edit<CR>
+    nnoremap <buffer> <silent> ? :<C-U>execute <SID>ShowHelp('Gstatus', 'Gstatus')<CR>
   catch /^fugitive:/
     return 'echoerr v:errmsg'
   endtry
